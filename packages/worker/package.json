@@ -1,0 +1,22 @@
+{
+    "name": "@perf-patrol/worker",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "tsx watch src/index.ts",
+        "build": "tsc",
+        "start": "node dist/index.js"
+    },
+    "dependencies": {
+        "@prisma/client": "^5.10.0",
+        "bullmq": "^5.1.0",
+        "lighthouse": "^11.4.0",
+        "puppeteer": "^22.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.11.0",
+        "prisma": "^5.10.0",
+        "tsx": "^4.7.0",
+        "typescript": "^5.3.0"
+    }
+}

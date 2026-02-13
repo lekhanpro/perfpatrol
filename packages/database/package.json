@@ -1,0 +1,22 @@
+{
+    "name": "@perf-patrol/database",
+    "version": "1.0.0",
+    "private": true,
+    "main": "./index.ts",
+    "types": "./index.ts",
+    "scripts": {
+        "generate": "prisma generate",
+        "push": "prisma db push",
+        "seed": "tsx seed.ts",
+        "studio": "prisma studio",
+        "migrate": "prisma migrate dev"
+    },
+    "dependencies": {
+        "@prisma/client": "^5.10.0"
+    },
+    "devDependencies": {
+        "prisma": "^5.10.0",
+        "tsx": "^4.7.0",
+        "typescript": "^5.3.0"
+    }
+}

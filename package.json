@@ -1,0 +1,25 @@
+{
+  "name": "perf-patrol",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Automated Google Lighthouse Audit Platform",
+  "author": "Perf-Patrol Team",
+  "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "db:generate": "npm run generate --workspace=packages/database",
+    "db:push": "npm run push --workspace=packages/database",
+    "db:seed": "npm run seed --workspace=packages/database",
+    "worker:dev": "npm run dev --workspace=packages/worker",
+    "worker:build": "npm run build --workspace=packages/worker",
+    "lint": "npm run lint --workspace=apps/web"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
