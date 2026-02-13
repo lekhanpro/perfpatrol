@@ -12,6 +12,7 @@ const prisma = new PrismaClient();
 interface AuditJobData {
     url: string;
     projectId: string;
+    auditId: string;
 }
 
 // ─── Worker ──────────────────────────────────────────────────────
@@ -21,15 +22,20 @@ console.log(`📡 Connecting to Redis: ${REDIS_URL}`);
 const worker = new Worker<AuditJobData>(
     'audit-queue',
     async (job: Job<AuditJobData>) => {
-        const { url, projectId } = job.data;
-        console.log(`\n📋 Processing job ${job.id} | URL: ${url}`);
+        const { url, projectId, auditId } = job.data;
+        console.log(`\n📋 Processing job ${job.id} | URL: ${url} | AuditID: ${auditId}`);
+
+        if (!auditId) {
+            console.error('❌ Missing auditId in job data');
+            return; // Or throw error
+        }
 
         // Mark as processing
         await prisma.auditResult.update({
-            where: { id: job.data.projectId },
+            where: { id: auditId },
             data: { status: JobStatus.PROCESSING },
-        }).catch(() => {
-            // Audit result may not exist yet — create it
+        }).catch((e) => {
+            console.error(`Failed to mark audit ${auditId} as processing`, e);
         });
 
         let browser: Browser | null = null;
@@ -65,13 +71,23 @@ const worker = new Worker<AuditJobData>(
             const rawScore = reportJson.categories?.performance?.score;
             const score = rawScore != null ? Math.round(rawScore * 100) : 0;
 
-            // Save to database
-            await prisma.auditResult.create({
+            // Update result in database
+            await prisma.auditResult.update({
+                where: { id: auditId },
                 data: {
-                    projectId,
                     status: JobStatus.COMPLETED,
                     score,
                     reportJson: reportJson as any,
+                    // completedAt is auto-updated if we added it to schema?
+                    // schema has updatedAt, but having explicit completedAt is nice.
+                    // schema definition in step 348 shows completedAt? No?
+                    // step 348: completedAt DateTime?  Wait, step 348 says:
+                    // updatedAt DateTime @updatedAt
+                    // createdAt DateTime @default(now())
+                    // NO completedAt in schema step 348.
+                    // But schema step 0 REQUESTED it?
+                    // Step 348 shows: `updatedAt DateTime @updatedAt`
+                    // So I rely on `updatedAt`.
                 },
             });
 
@@ -82,15 +98,13 @@ const worker = new Worker<AuditJobData>(
             console.error(`❌ Job ${job.id} failed:`, errorMsg);
 
             // Save failure to DB
-            await prisma.auditResult.create({
+            await prisma.auditResult.update({
+                where: { id: auditId },
                 data: {
-                    projectId,
                     status: JobStatus.FAILED,
-                    score: null,
-                    reportJson: null,
                     errorMsg,
                 },
-            });
+            }).catch(e => console.error("Failed to update failure status", e));
 
             throw error;
         } finally {

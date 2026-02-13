@@ -32,7 +32,12 @@ export function AddProjectModal() {
             const res = await fetch('/api/scan', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: data.url, projectId: 'new' }),
+                body: JSON.stringify({
+                    url: data.url,
+                    projectId: 'new',
+                    name: data.name,
+                    frequency: data.frequency
+                }),
             });
 
             if (!res.ok) throw new Error('Failed to create project');
