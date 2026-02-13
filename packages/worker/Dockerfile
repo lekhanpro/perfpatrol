@@ -4,17 +4,17 @@ USER root
 WORKDIR /app
 
 # Copy dependency manifests
-COPY package*.json ./
-COPY ../../packages/database/prisma ./prisma/
+COPY packages/worker/package*.json ./
+COPY packages/database/prisma ./prisma/
 
-# Install production dependencies
-RUN npm install --omit=dev
+# Install all dependencies (including dev)
+RUN npm install
 
 # Generate Prisma client
 RUN npx prisma generate
 
 # Copy source code
-COPY . .
+COPY packages/worker/ .
 
 # Build TypeScript
 RUN npm run build
