@@ -2,9 +2,29 @@
   "name": "perf-patrol",
   "version": "1.0.0",
   "private": true,
-  "description": "Automated Google Lighthouse Audit Platform",
-  "author": "Perf-Patrol Team",
+  "description": "Open-source distributed platform for automated Google Lighthouse audits. Submit a URL, queue the job, and get actionable performance insights with historical trend analysis.",
+  "author": "Perf-Patrol Contributors",
   "license": "MIT",
+  "homepage": "https://github.com/lekhanpro/perfpatrol#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lekhanpro/perfpatrol.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lekhanpro/perfpatrol/issues"
+  },
+  "keywords": [
+    "lighthouse",
+    "performance",
+    "web-performance",
+    "audit",
+    "monitoring",
+    "nextjs",
+    "prisma",
+    "bullmq",
+    "puppeteer",
+    "docker"
+  ],
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -12,14 +32,24 @@
   "scripts": {
     "dev": "npm run dev --workspace=apps/web",
     "build": "npm run build --workspace=apps/web",
+    "start": "npm run start --workspace=apps/web",
+    "lint": "npm run lint --workspace=apps/web",
     "db:generate": "npm run generate --workspace=packages/database",
     "db:push": "npm run push --workspace=packages/database",
+    "db:migrate": "npm run migrate --workspace=packages/database",
     "db:seed": "npm run seed --workspace=packages/database",
+    "db:studio": "npm run studio --workspace=packages/database",
     "worker:dev": "npm run dev --workspace=packages/worker",
     "worker:build": "npm run build --workspace=packages/worker",
-    "lint": "npm run lint --workspace=apps/web"
+    "worker:start": "npm run start --workspace=packages/worker",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules apps/*/.next packages/*/dist",
+    "preinstall": "npx only-allow npm"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }

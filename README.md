@@ -6,16 +6,17 @@
 <h3 align="center">Automated Web Performance Monitoring at Scale</h3>
 
 <p align="center">
-  <em>Open-source distributed platform for continuous Google Lighthouse audits.<br/>Submit a URL → Queue the job → Get actionable performance insights.</em>
+  <em>Open-source, self-hosted Google Lighthouse audit platform.<br/>Submit a URL → Queue the job → Get actionable performance insights.</em>
 </p>
 
 <p align="center">
-  <a href="https://github.com/lekhanpro/perfpatrol/actions"><img src="https://img.shields.io/github/actions/workflow/status/lekhanpro/perfpatrol/ci.yml?branch=main&style=flat-square&logo=github&label=CI" alt="CI Status" /></a>
+  <a href="https://github.com/lekhanpro/perfpatrol/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/lekhanpro/perfpatrol/ci.yml?branch=main&style=flat-square&logo=github&label=CI" alt="CI" /></a>
   <a href="https://github.com/lekhanpro/perfpatrol/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" /></a>
   <a href="https://github.com/lekhanpro/perfpatrol/stargazers"><img src="https://img.shields.io/github/stars/lekhanpro/perfpatrol?style=flat-square&logo=github&color=yellow" alt="Stars" /></a>
   <a href="https://github.com/lekhanpro/perfpatrol/issues"><img src="https://img.shields.io/github/issues/lekhanpro/perfpatrol?style=flat-square&logo=github" alt="Issues" /></a>
   <img src="https://img.shields.io/badge/TypeScript-100%25-3178c6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Docker-Ready-2496ed?style=flat-square&logo=docker&logoColor=white" alt="Docker" />
+  <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square" alt="PRs Welcome" />
 </p>
 
 <p align="center">
@@ -37,7 +38,15 @@
 User submits URL → Job queued in Redis → Worker runs Lighthouse → Results saved to PostgreSQL → Dashboard shows trends
 ```
 
-Unlike one-off audit tools, Perf-Patrol continuously monitors your sites and alerts you when performance degrades. It's designed with a **microservices architecture** that scales horizontally — add more workers to handle more audits.
+Unlike one-off audit tools, Perf-Patrol **continuously monitors** your sites and alerts you when performance degrades. It's built with a **microservices architecture** that scales horizontally — add more workers to handle more audits.
+
+### Why Perf-Patrol?
+
+- 🏠 **Self-hosted** — Your data stays on your infrastructure
+- 📈 **Historical trends** — Track performance over weeks and months
+- ⚡ **Distributed** — Scale workers independently based on load
+- 🐳 **One command** — Full Docker Compose stack, zero to running in 2 minutes
+- 🔌 **Extensible** — Clean API for integrations and custom workflows
 
 ---
 
@@ -76,13 +85,13 @@ Full Docker Compose stack — PostgreSQL, Redis, Web App, and Worker containers.
 <td width="50%">
 
 ### 📈 Historical Trend Analysis
-Track performance over time. Identify regressions, measure improvements, and set baselines for your web properties.
+Track performance over time with interactive charts. Identify regressions, measure improvements, and set baselines.
 
 </td>
 <td width="50%">
 
 ### 🔔 Status Monitoring
-Real-time worker health checks, job status tracking, and pass/fail badges for every audit. Know instantly when something breaks.
+Real-time worker health checks, job status tracking (Pending → Processing → Completed), and pass/fail indicators for every audit.
 
 </td>
 </tr>
@@ -94,27 +103,34 @@ Real-time worker health checks, job status tracking, and pass/fail badges for ev
 
 ### Prerequisites
 
-| Tool | Version |
-|------|---------|
-| [Docker](https://docker.com) | 20.10+ |
-| [Docker Compose](https://docs.docker.com/compose/) | 2.0+ |
-| [Node.js](https://nodejs.org) | 18+ (for local dev) |
+| Tool | Version | Required |
+|------|---------|----------|
+| [Docker](https://docker.com) | 20.10+ | ✅ For production |
+| [Docker Compose](https://docs.docker.com/compose/) | 2.0+ | ✅ For production |
+| [Node.js](https://nodejs.org) | 18+ | ✅ For local dev |
+| [npm](https://npmjs.com) | 9+ | ✅ For local dev |
 
-### 1. Clone & Configure
+### Option 1: Docker Compose (Recommended)
 
 ```bash
+# 1. Clone the repository
 git clone https://github.com/lekhanpro/perfpatrol.git
 cd perfpatrol
+
+# 2. Configure environment
 cp .env.example .env
-```
 
-### 2. Start with Docker Compose
-
-```bash
+# 3. Start the entire stack
 docker-compose up -d
+
+# 4. Initialize the database
+docker-compose exec web npx prisma migrate dev --name init
+
+# 5. (Optional) Seed demo data
+docker-compose exec web npx prisma db seed
 ```
 
-This spins up **4 services**:
+**Services started:**
 
 | Service | Port | Description |
 |---------|------|-------------|
@@ -123,28 +139,46 @@ This spins up **4 services**:
 | `postgres` | `5432` | PostgreSQL Database |
 | `redis` | `6379` | Redis Queue |
 
-### 3. Initialize the Database
+### Option 2: Local Development
 
 ```bash
-# Run Prisma migrations
-docker-compose exec web npx prisma migrate dev --name init
+# 1. Clone and install
+git clone https://github.com/lekhanpro/perfpatrol.git
+cd perfpatrol
+npm install
 
-# Seed with sample data
-docker-compose exec web npx prisma db seed
+# 2. Start infrastructure
+docker-compose up -d postgres redis
+
+# 3. Configure environment
+cp .env.example .env
+
+# 4. Setup database
+npx prisma generate --schema=packages/database/prisma/schema.prisma
+npx prisma migrate dev --schema=packages/database/prisma/schema.prisma --name init
+
+# 5. (Optional) Seed demo data
+npm run db:seed
+
+# 6. Start web app (Terminal 1)
+npm run dev
+
+# 7. Start worker (Terminal 2)
+npm run worker:dev
 ```
 
-### 4. Open the Dashboard
+### 🔗 Open the Dashboard
 
 ```
 http://localhost:3000
 ```
 
-### 5. Trigger Your First Scan
+### 📡 Trigger Your First Scan
 
 ```bash
 curl -X POST http://localhost:3000/api/scan \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://example.com", "projectId": "demo-project"}'
+  -d '{"url": "https://example.com", "projectId": "new", "name": "Example Site"}'
 ```
 
 ---
@@ -161,14 +195,14 @@ graph TB
     subgraph WebApp["🌐 Web App (Next.js 14)"]
         Dashboard["Dashboard UI<br/>React + Recharts"]
         API["REST API<br/>/api/scan"]
-        ServerActions["Server Actions"]
+        ServerActions["Server Components<br/>Prisma Queries"]
     end
 
     subgraph Queue["📮 Message Queue"]
         Redis["Redis<br/>BullMQ"]
     end
 
-    subgraph Workers["⚙️ Worker Pool"]
+    subgraph Workers["⚙️ Worker Pool (Scalable)"]
         Worker1["Worker 1"]
         Worker2["Worker 2"]
         WorkerN["Worker N..."]
@@ -210,12 +244,13 @@ graph TB
 
 ```
 1. User submits URL via Dashboard or API
-2. API endpoint creates a job in the Redis queue (BullMQ)
-3. Available worker picks up the job
-4. Worker launches Puppeteer (headless Chrome) inside Docker
-5. Lighthouse runs the audit and generates a JSON report
-6. Worker saves results to PostgreSQL via Prisma
-7. Dashboard fetches and displays results with charts and scores
+2. API creates a PENDING audit record in PostgreSQL
+3. Job is queued in Redis (BullMQ) with the audit ID
+4. Available worker picks up the job
+5. Worker launches Puppeteer (headless Chrome)
+6. Lighthouse runs the audit and generates a JSON report
+7. Worker updates the audit record to COMPLETED with score
+8. Dashboard fetches and displays results with charts
 ```
 
 ---
@@ -230,18 +265,28 @@ Queue a new Lighthouse audit.
 
 ```json
 {
-  "url": "https://example.com",
-  "projectId": "my-project-id"
+    "url": "https://example.com",
+    "projectId": "existing-id-or-new",
+    "name": "My Website",
+    "frequency": "daily"
 }
 ```
 
-**Response:**
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `url` | string | ✅ | URL to audit |
+| `projectId` | string | ✅ | Existing project ID or `"new"` to create one |
+| `name` | string | ❌ | Project name (auto-extracted from URL if omitted) |
+| `frequency` | string | ❌ | `"daily"` or `"weekly"` (default: `"daily"`) |
+
+**Success Response:**
 
 ```json
 {
-  "success": true,
-  "message": "Scan queued successfully",
-  "jobId": "abc123"
+    "success": true,
+    "message": "Scan queued",
+    "auditId": "clx1abc123...",
+    "projectId": "clx2def456..."
 }
 ```
 
@@ -249,9 +294,10 @@ Queue a new Lighthouse audit.
 
 | Status | Body | Description |
 |--------|------|-------------|
-| `400` | `{"error": "Missing or invalid \"url\" field"}` | URL validation failed |
-| `400` | `{"error": "Invalid URL format"}` | Malformed URL |
-| `500` | `{"error": "Internal Server Error"}` | Queue connection failed |
+| `400` | `{"error": "Missing url"}` | URL field missing |
+| `400` | `{"error": "Invalid URL"}` | Malformed URL |
+| `400` | `{"error": "Missing projectId"}` | Project ID missing |
+| `500` | `{"error": "Internal Server Error"}` | Queue or DB error |
 
 ---
 
@@ -260,38 +306,43 @@ Queue a new Lighthouse audit.
 ```
 perfpatrol/
 ├── apps/
-│   └── web/                    # Next.js 14 Application
+│   └── web/                       # Next.js 14 Application
 │       ├── app/
-│       │   ├── api/scan/       # REST API endpoints
-│       │   │   └── route.ts    # POST /api/scan
-│       │   ├── dashboard/      # Dashboard pages
-│       │   │   ├── layout.tsx  # Sidebar navigation
-│       │   │   └── page.tsx    # Stats, charts, activity
-│       │   ├── layout.tsx      # Root layout (dark mode)
-│       │   ├── page.tsx        # Redirects to /dashboard
-│       │   └── globals.css     # Design system tokens
+│       │   ├── api/scan/          # REST API endpoints
+│       │   │   └── route.ts       # POST /api/scan
+│       │   ├── dashboard/         # Dashboard pages
+│       │   │   ├── layout.tsx     # Sidebar + navigation
+│       │   │   ├── page.tsx       # Overview (stats, chart, activity)
+│       │   │   └── projects/
+│       │   │       └── page.tsx   # Projects listing
+│       │   ├── layout.tsx         # Root layout (dark mode)
+│       │   └── globals.css        # Design tokens
 │       ├── components/
-│       │   ├── ui/             # shadcn/ui components
-│       │   └── add-project-modal.tsx
-│       ├── lib/
-│       │   └── utils.ts        # cn() utility
-│       ├── tailwind.config.ts
-│       └── package.json
+│       │   ├── ui/                # shadcn/ui components
+│       │   ├── add-project-modal.tsx
+│       │   └── performance-chart.tsx
+│       └── Dockerfile             # Production container
 ├── packages/
-│   ├── database/               # Prisma ORM Package
+│   ├── database/                  # Prisma ORM Package
 │   │   ├── prisma/
-│   │   │   └── schema.prisma   # DB schema
-│   │   ├── seed.ts             # Database seeder
-│   │   └── index.ts            # Client export
-│   └── worker/                 # BullMQ Worker
+│   │   │   └── schema.prisma     # Database schema
+│   │   ├── seed.ts               # Demo data seeder
+│   │   └── index.ts              # Singleton client export
+│   └── worker/                    # BullMQ Worker Service
 │       ├── src/
-│       │   └── index.ts        # Queue consumer + Lighthouse
-│       ├── Dockerfile          # Puppeteer-ready container
-│       └── package.json
-├── docker-compose.yml          # Full stack orchestration
-├── .env.example                # Environment template
-├── tsconfig.json               # Base TS config
-└── package.json                # Monorepo root
+│       │   └── index.ts          # Queue consumer + Lighthouse
+│       └── Dockerfile            # Puppeteer-ready container
+├── .github/
+│   ├── workflows/ci.yml          # CI/CD pipeline
+│   ├── ISSUE_TEMPLATE/           # Bug & feature templates
+│   └── pull_request_template.md  # PR template
+├── docker-compose.yml            # Full stack orchestration
+├── .env.example                  # Environment template
+├── CONTRIBUTING.md               # Contribution guide
+├── SECURITY.md                   # Security policy
+├── CODE_OF_CONDUCT.md            # Community guidelines
+├── LICENSE                       # MIT License
+└── package.json                  # Monorepo root
 ```
 
 ---
@@ -302,13 +353,14 @@ perfpatrol/
 |-------|-----------|---------|
 | **Frontend** | Next.js 14 (App Router) | Server-rendered React dashboard |
 | **Styling** | Tailwind CSS + shadcn/ui | Dark-mode design system |
-| **Charts** | Recharts | Performance trend visualization |
+| **Charts** | Recharts | Interactive performance trends |
 | **Icons** | Lucide React | Consistent icon library |
 | **API** | Next.js Route Handlers | RESTful scan endpoints |
 | **Queue** | BullMQ + Redis | Distributed job processing |
-| **Worker** | Node.js + TypeScript | Job consumer service |
+| **Worker** | Node.js + TypeScript | Audit job consumer |
 | **Audit Engine** | Puppeteer + Lighthouse | Headless browser audits |
 | **Database** | PostgreSQL + Prisma | Typed ORM with migrations |
+| **CI/CD** | GitHub Actions | Automated testing pipeline |
 | **Orchestration** | Docker Compose | Multi-container deployment |
 
 ---
@@ -317,71 +369,83 @@ perfpatrol/
 
 ```prisma
 model Project {
-  id        String         @id @default(cuid())
-  name      String
-  url       String
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  audits    AuditResult[]
+    id        String        @id @default(uuid())
+    name      String
+    url       String
+    frequency String        @default("daily")
+    createdAt DateTime      @default(now())
+    updatedAt DateTime      @updatedAt
+    audits    AuditResult[]
 }
 
 model AuditResult {
-  id           String    @id @default(cuid())
-  projectId    String
-  project      Project   @relation(fields: [projectId], references: [id])
-  url          String
-  status       JobStatus @default(PENDING)
-  score        Int?
-  report       Json?
-  errorMessage String?
-  createdAt    DateTime  @default(now())
-  completedAt  DateTime?
+    id         String    @id @default(uuid())
+    projectId  String
+    project    Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    status     JobStatus @default(PENDING)
+    score      Int?
+    reportJson Json?
+    errorMsg   String?
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
 }
 
 enum JobStatus {
-  PENDING
-  RUNNING
-  COMPLETED
-  FAILED
+    PENDING
+    PROCESSING
+    COMPLETED
+    FAILED
 }
 ```
 
 ---
 
-## 🧑‍💻 Local Development
-
-```bash
-# Install dependencies (from root)
-npm install
-
-# Start the database and Redis
-docker-compose up postgres redis -d
-
-# Generate Prisma client
-cd packages/database && npx prisma generate && cd ../..
-
-# Run the web app
-cd apps/web && npm run dev
-
-# Run the worker (in a separate terminal)
-cd packages/worker && npx ts-node src/index.ts
-```
-
----
-
-## 🔧 Environment Variables
+##  Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `DATABASE_URL` | `postgresql://perfpatrol:perfpatrol@localhost:5432/perfpatrol` | PostgreSQL connection string |
 | `REDIS_URL` | `redis://localhost:6379` | Redis connection string |
 | `NEXT_PUBLIC_APP_URL` | `http://localhost:3000` | Public URL of the web app |
+| `WORKER_CONCURRENCY` | `2` | Number of concurrent audit jobs per worker |
+| `RATE_LIMIT_MAX` | `5` | Max jobs per rate limit window |
+| `RATE_LIMIT_DURATION` | `60000` | Rate limit window in milliseconds |
+
+---
+
+## 🚢 Deployment
+
+### Vercel (Web App)
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy from apps/web
+cd apps/web && vercel
+```
+
+Set environment variables in the Vercel dashboard:
+- `DATABASE_URL` — Use a managed PostgreSQL (e.g., Supabase, Neon, Railway)
+- `REDIS_URL` — Use managed Redis (e.g., Upstash, Railway)
+
+### Railway / Render (Worker)
+
+Deploy the worker using the Dockerfile at `packages/worker/Dockerfile`. Set the same `DATABASE_URL` and `REDIS_URL` environment variables.
+
+### Docker (Full Stack)
+
+```bash
+docker-compose up -d --build
+```
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how to get started:
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Quick Start for Contributors
 
 1. **Fork** the repository
 2. **Create** a feature branch: `git checkout -b feat/amazing-feature`
@@ -389,16 +453,18 @@ We welcome contributions! Here's how to get started:
 4. **Push** to the branch: `git push origin feat/amazing-feature`
 5. **Open** a Pull Request
 
-### Contribution Ideas
+### 🗺️ Roadmap
 
-- [ ] Add email/Slack notifications for failed audits
-- [ ] Implement scheduled (cron) scans
-- [ ] Add authentication (NextAuth.js)
-- [ ] Build a CLI tool for triggering scans
-- [ ] Add PDF report generation
-- [ ] Implement WebSocket-based real-time updates
-- [ ] Add multi-page crawl support
-- [ ] Create GitHub Actions CI/CD pipeline
+- [ ] 📧 Email/Slack notifications for failed audits
+- [ ] ⏰ Scheduled (cron) scans with configurable cadence
+- [ ] 🔐 Authentication with NextAuth.js
+- [ ] 📱 Mobile-responsive dashboard
+- [ ] 📄 PDF report generation and export
+- [ ] 🔌 WebSocket real-time job status updates
+- [ ] 🕷️ Multi-page crawl audit support
+- [ ] 🖥️ CLI tool for triggering scans
+- [ ] 📊 Accessibility, SEO, and Best Practices scoring
+- [ ] 🔔 Configurable score threshold alerts
 
 ---
 

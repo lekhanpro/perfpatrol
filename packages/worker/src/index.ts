@@ -4,8 +4,9 @@ import { PrismaClient, JobStatus } from '@prisma/client';
 
 // ─── Configuration ───────────────────────────────────────────────
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
-const MAX_RETRIES = 3;
-const CONCURRENCY = 2;
+const CONCURRENCY = Number(process.env.WORKER_CONCURRENCY) || 2;
+const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX) || 5;
+const RATE_LIMIT_DURATION = Number(process.env.RATE_LIMIT_DURATION) || 60_000;
 
 const prisma = new PrismaClient();
 
@@ -17,17 +18,17 @@ interface AuditJobData {
 
 // ─── Worker ──────────────────────────────────────────────────────
 console.log('🚀 Perf-Patrol Worker starting...');
-console.log(`📡 Connecting to Redis: ${REDIS_URL}`);
+console.log(`📡 Redis: ${REDIS_URL}`);
+console.log(`⚙️  Concurrency: ${CONCURRENCY} | Rate: ${RATE_LIMIT_MAX} jobs / ${RATE_LIMIT_DURATION}ms`);
 
 const worker = new Worker<AuditJobData>(
     'audit-queue',
     async (job: Job<AuditJobData>) => {
         const { url, projectId, auditId } = job.data;
-        console.log(`\n📋 Processing job ${job.id} | URL: ${url} | AuditID: ${auditId}`);
+        console.log(`\n📋 Job ${job.id} | URL: ${url} | Audit: ${auditId}`);
 
         if (!auditId) {
-            console.error('❌ Missing auditId in job data');
-            return; // Or throw error
+            throw new Error('Missing auditId in job data');
         }
 
         // Mark as processing
@@ -35,13 +36,12 @@ const worker = new Worker<AuditJobData>(
             where: { id: auditId },
             data: { status: JobStatus.PROCESSING },
         }).catch((e) => {
-            console.error(`Failed to mark audit ${auditId} as processing`, e);
+            console.error(`Failed to mark audit ${auditId} as PROCESSING:`, e);
         });
 
         let browser: Browser | null = null;
 
         try {
-            // Launch headless Chrome
             browser = await puppeteer.launch({
                 args: [
                     '--no-sandbox',
@@ -52,7 +52,7 @@ const worker = new Worker<AuditJobData>(
                 headless: true,
             });
 
-            // Dynamic import for lighthouse (ESM module)
+            // Dynamic import for lighthouse (ESM)
             const lighthouse = (await import('lighthouse')).default;
             const { port } = new URL(browser.wsEndpoint());
 
@@ -63,7 +63,7 @@ const worker = new Worker<AuditJobData>(
                 logLevel: 'error',
             });
 
-            if (!runnerResult || !runnerResult.lhr) {
+            if (!runnerResult?.lhr) {
                 throw new Error('Lighthouse returned no result');
             }
 
@@ -71,55 +71,35 @@ const worker = new Worker<AuditJobData>(
             const rawScore = reportJson.categories?.performance?.score;
             const score = rawScore != null ? Math.round(rawScore * 100) : 0;
 
-            // Update result in database
             await prisma.auditResult.update({
                 where: { id: auditId },
                 data: {
                     status: JobStatus.COMPLETED,
                     score,
                     reportJson: reportJson as any,
-                    // completedAt is auto-updated if we added it to schema?
-                    // schema has updatedAt, but having explicit completedAt is nice.
-                    // schema definition in step 348 shows completedAt? No?
-                    // step 348: completedAt DateTime?  Wait, step 348 says:
-                    // updatedAt DateTime @updatedAt
-                    // createdAt DateTime @default(now())
-                    // NO completedAt in schema step 348.
-                    // But schema step 0 REQUESTED it?
-                    // Step 348 shows: `updatedAt DateTime @updatedAt`
-                    // So I rely on `updatedAt`.
                 },
             });
 
-            console.log(`✅ Audit complete | ${url} | Score: ${score}/100`);
+            console.log(`✅ Complete | ${url} | Score: ${score}/100`);
             return { score, url };
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : String(error);
             console.error(`❌ Job ${job.id} failed:`, errorMsg);
 
-            // Save failure to DB
             await prisma.auditResult.update({
                 where: { id: auditId },
-                data: {
-                    status: JobStatus.FAILED,
-                    errorMsg,
-                },
-            }).catch(e => console.error("Failed to update failure status", e));
+                data: { status: JobStatus.FAILED, errorMsg },
+            }).catch((e) => console.error('Failed to update failure status:', e));
 
             throw error;
         } finally {
-            if (browser) {
-                await browser.close();
-            }
+            if (browser) await browser.close();
         }
     },
     {
         connection: { url: REDIS_URL },
         concurrency: CONCURRENCY,
-        limiter: {
-            max: 5,
-            duration: 60_000, // 5 jobs per minute
-        },
+        limiter: { max: RATE_LIMIT_MAX, duration: RATE_LIMIT_DURATION },
         removeOnComplete: { count: 100 },
         removeOnFail: { count: 50 },
     },
@@ -127,18 +107,18 @@ const worker = new Worker<AuditJobData>(
 
 // ─── Event Handlers ──────────────────────────────────────────────
 worker.on('completed', (job) => {
-    console.log(`🎉 Job ${job.id} completed successfully`);
+    console.log(`🎉 Job ${job.id} completed`);
 });
 
 worker.on('failed', (job, err) => {
-    console.error(`💥 Job ${job?.id} failed after ${job?.attemptsMade} attempts:`, err.message);
+    console.error(`💥 Job ${job?.id} failed (attempt ${job?.attemptsMade}):`, err.message);
 });
 
 worker.on('error', (err) => {
     console.error('⚠️  Worker error:', err);
 });
 
-// Graceful shutdown
+// ─── Graceful Shutdown ───────────────────────────────────────────
 const shutdown = async (): Promise<void> => {
     console.log('\n🛑 Shutting down worker...');
     await worker.close();
@@ -149,4 +129,4 @@ const shutdown = async (): Promise<void> => {
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
 
-console.log('✅ Worker is ready and listening for jobs on "audit-queue"');
+console.log('✅ Worker ready — listening on "audit-queue"');

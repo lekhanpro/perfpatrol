@@ -8,6 +8,7 @@ dist/
 .next/
 out/
 build/
+*.tsbuildinfo
 
 # Environment
 .env
@@ -39,3 +40,8 @@ coverage/
 
 # Docker
 docker-compose.override.yml
+
+# Misc
+*.log
+.turbo/
+.vercel/
