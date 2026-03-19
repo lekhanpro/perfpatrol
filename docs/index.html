@@ -3,137 +3,615 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Perf-Patrol - Automated Web Performance Monitoring at Scale">
+    <meta name="description" content="Perf-Patrol - Self-hosted, distributed web performance monitoring. A private alternative to Google PageSpeed Insights with automated scheduling and historical trend analysis.">
+    <meta property="og:title" content="Perf-Patrol | Automated Lighthouse Audits">
+    <meta property="og:description" content="Open-source, self-hosted Google Lighthouse audit platform with automated scheduling and historical trend analysis.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#10b981">
     <title>Perf-Patrol | Automated Lighthouse Audits</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
-    
+    <div class="glow-orb orb-3"></div>
+
+    <!-- Navbar -->
     <nav class="navbar glass">
         <div class="nav-content row-between">
-            <h1 class="logo">🛡️ Perf-Patrol</h1>
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                Perf-Patrol
+            </a>
             <div class="nav-links">
                 <a href="#features" class="nav-link">Features</a>
                 <a href="#architecture" class="nav-link">Architecture</a>
+                <a href="#api" class="nav-link">API</a>
+                <a href="#techstack" class="nav-link">Tech Stack</a>
                 <a href="#quickstart" class="btn-primary-sm">Quick Start</a>
-                <a href="https://github.com/lekhanpro/perfpatrol" class="btn-ghost" target="_blank">
-                    <svg height="24" width="24" aria-hidden="true" viewBox="0 0 16 16" version="1.1" fill="currentColor">
-                        <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
-                    </svg>
+                <a href="https://github.com/lekhanpro/perfpatrol" class="btn-ghost" target="_blank" rel="noopener">
+                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
                     GitHub
                 </a>
             </div>
+            <button class="mobile-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu glass">
+        <a href="#features" class="mobile-menu-link">Features</a>
+        <a href="#architecture" class="mobile-menu-link">Architecture</a>
+        <a href="#api" class="mobile-menu-link">API</a>
+        <a href="#techstack" class="mobile-menu-link">Tech Stack</a>
+        <a href="#quickstart" class="mobile-menu-link">Quick Start</a>
+        <a href="https://github.com/lekhanpro/perfpatrol" class="mobile-menu-link" target="_blank" rel="noopener">GitHub</a>
+    </div>
+
+    <!-- Hero -->
     <header class="hero section">
         <div class="hero-content">
-            <h1 class="hero-title reveal">Automated Web<br><span class="gradient-text">Performance Monitoring</span> at Scale.</h1>
-            <p class="hero-subtitle reveal delay-1">
-                Open-source, self-hosted Google Lighthouse audit platform. <br>
-                Submit a URL → Queue the job → Get actionable performance insights.
+            <div class="hero-badge reveal">
+                <span class="badge-dot"></span>
+                Open Source &middot; MIT License
+            </div>
+            <h1 class="hero-title reveal delay-1">Automated Web<br><span class="gradient-text">Performance Monitoring</span><br>at Scale.</h1>
+            <p class="hero-subtitle reveal delay-2">
+                Self-hosted alternative to Google PageSpeed Insights.<br>
+                Submit a URL &rarr; Queue the job &rarr; Get actionable insights.
             </p>
-            <div class="hero-actions reveal delay-2">
-                <a href="#quickstart" class="btn-primary">Get Started</a>
-                <a href="#features" class="btn-secondary">Explore Features</a>
+            <div class="hero-actions reveal delay-3">
+                <a href="#quickstart" class="btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Get Started
+                </a>
+                <a href="https://github.com/lekhanpro/perfpatrol" class="btn-secondary" target="_blank" rel="noopener">
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+                    Star on GitHub
+                </a>
+            </div>
+            <div class="hero-stats reveal delay-3">
+                <div class="stat-item">
+                    <span class="stat-value">6+</span>
+                    <span class="stat-label">Core Features</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">1 cmd</span>
+                    <span class="stat-label">To Deploy</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">MIT</span>
+                    <span class="stat-label">License</span>
+                </div>
             </div>
         </div>
         <div class="hero-visual reveal delay-3">
-            <div class="glass-card visual-card float">
+            <div class="glass visual-card float">
                 <div class="cmd-header">
                     <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                    <span class="cmd-title">api-request.sh</span>
                 </div>
-                <code>$ curl -X POST /api/scan \<br>
-&nbsp;&nbsp;&nbsp;-d '{"url":"https://example.com"}'<br><br>
-> {"success": true, "auditId": "clx1abc..."}
-                </code>
+                <pre class="hero-code"><code><span class="code-comment"># Trigger a Lighthouse audit</span>
+<span class="code-prompt">$</span> curl -X POST /api/scan \
+    -H "Content-Type: application/json" \
+    -d '{
+      <span class="code-key">"url"</span>: <span class="code-string">"https://example.com"</span>,
+      <span class="code-key">"projectId"</span>: <span class="code-string">"proj_01"</span>
+    }'
+
+<span class="code-comment"># Response</span>
+{
+  <span class="code-key">"success"</span>: <span class="code-bool">true</span>,
+  <span class="code-key">"auditId"</span>: <span class="code-string">"clx1abc..."</span>,
+  <span class="code-key">"projectId"</span>: <span class="code-string">"proj_01"</span>
+}</code></pre>
             </div>
         </div>
     </header>
 
+    <!-- Features -->
     <section id="features" class="section">
-        <h2 class="section-title reveal">Key <span class="gradient-text">Features</span></h2>
+        <h2 class="section-title reveal">Why <span class="gradient-text">Perf-Patrol</span>?</h2>
+        <p class="section-subtitle reveal">Everything you need to monitor, analyze, and improve web performance.</p>
         <div class="grid">
-            <div class="feature-card glass reveal slide-up">
-                <div class="feature-icon">🔍</div>
+            <div class="feature-card glass reveal">
+                <div class="feature-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
                 <h3>Automated Audits</h3>
                 <p>Run Google Lighthouse audits on any URL with a single API call. Get scores for Performance, Accessibility, Best Practices, and SEO.</p>
             </div>
-            <div class="feature-card glass reveal slide-up delay-1">
-                <div class="feature-icon">📊</div>
+            <div class="feature-card glass reveal">
+                <div class="feature-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
                 <h3>Real-Time Dashboard</h3>
                 <p>Beautiful dark-mode dashboard built with Next.js 14 and Recharts. View performance trends and critical issues at a glance.</p>
             </div>
-            <div class="feature-card glass reveal slide-up delay-2">
-                <div class="feature-icon">⚡</div>
+            <div class="feature-card glass reveal">
+                <div class="feature-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
                 <h3>Distributed Job Queue</h3>
-                <p>BullMQ-powered Redis queue with automatic retries, exponential backoff, and concurrent processing. Scale horizontally.</p>
+                <p>BullMQ-powered Redis queue with automatic retries, exponential backoff, and concurrent processing. Scale horizontally with ease.</p>
             </div>
-            <div class="feature-card glass reveal slide-up">
-                <div class="feature-icon">🐳</div>
+            <div class="feature-card glass reveal">
+                <div class="feature-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg></div>
                 <h3>One-Command Deploy</h3>
-                <p>Full Docker Compose stack — PostgreSQL, Redis, Web App, and Worker containers. From zero to running in 2 mins.</p>
+                <p>Full Docker Compose stack &mdash; PostgreSQL, Redis, Web App, and Worker containers. From zero to running in under 2 minutes.</p>
             </div>
-            <div class="feature-card glass reveal slide-up delay-1">
-                <div class="feature-icon">📈</div>
+            <div class="feature-card glass reveal">
+                <div class="feature-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
                 <h3>Historical Trends</h3>
-                <p>Track performance over time with interactive charts. Identify regressions, measure improvements, and set baselines.</p>
+                <p>Track performance over time with interactive charts. Identify regressions, measure improvements, and set baselines for your sites.</p>
             </div>
-            <div class="feature-card glass reveal slide-up delay-2">
-                <div class="feature-icon">🔔</div>
-                <h3>Status Monitoring</h3>
-                <p>Real-time worker health checks, job status tracking (Pending → Processing → Completed), and pass/fail indicators.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="architecture" class="section dark-section">
-        <h2 class="section-title reveal">Robust <span class="gradient-text">Architecture</span></h2>
-        <div class="arch-container glass reveal">
-            <div class="arch-flow">
-                <div class="arch-node">👤 Client / API</div>
-                <div class="arrow">↓</div>
-                <div class="arch-node primary">🌐 Next.js App / REST API</div>
-                <div class="arrow">↓</div>
-                <div class="arch-row">
-                    <div class="arch-node queue">📮 Redis Queue</div>
-                    <div class="arch-node db">💾 PostgreSQL (Prisma)</div>
-                </div>
-                <div class="arrow">↓</div>
-                <div class="arch-node worker">⚙️ Worker Pool (Puppeteer + Lighthouse)</div>
+            <div class="feature-card glass reveal">
+                <div class="feature-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+                <h3>Worker Health Monitoring</h3>
+                <p>Real-time worker health checks, job status tracking (Pending &rarr; Processing &rarr; Completed), and pass/fail indicators.</p>
             </div>
         </div>
     </section>
 
-    <section id="quickstart" class="section">
-        <h2 class="section-title reveal"><span class="gradient-text">Quick Start</span></h2>
-        <p class="section-subtitle reveal">Deploy quickly with Docker Compose</p>
-        
-        <div class="code-block glass reveal slide-up">
+    <!-- Dashboard Preview -->
+    <section id="preview" class="section">
+        <h2 class="section-title reveal">Dashboard <span class="gradient-text">Preview</span></h2>
+        <p class="section-subtitle reveal">A clean, modern interface to monitor all your projects.</p>
+        <div class="dashboard-preview glass reveal">
             <div class="cmd-header">
                 <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-                <span class="cmd-title">terminal</span>
+                <span class="cmd-title">localhost:3000/dashboard</span>
             </div>
-            <pre><code># 1. Clone the repository
-git clone https://github.com/lekhanpro/perfpatrol.git
-cd perfpatrol
-
-# 2. Configure environment
-cp .env.example .env
-
-# 3. Start the entire stack
-docker-compose up -d
-
-# 4. Open http://localhost:3000</code></pre>
+            <div class="dashboard-mock">
+                <!-- Sidebar -->
+                <div class="mock-sidebar">
+                    <div class="mock-logo">
+                        <div class="mock-logo-icon"></div>
+                        <div class="mock-logo-text"></div>
+                    </div>
+                    <div class="mock-nav-item active"></div>
+                    <div class="mock-nav-item"></div>
+                    <div class="mock-nav-item"></div>
+                    <div class="mock-nav-item"></div>
+                    <div class="mock-worker-status">
+                        <div class="mock-status-dot"></div>
+                        <span>Worker: Active</span>
+                    </div>
+                </div>
+                <!-- Main -->
+                <div class="mock-main">
+                    <div class="mock-header">
+                        <div class="mock-breadcrumb"></div>
+                        <div class="mock-avatar"></div>
+                    </div>
+                    <div class="mock-stats-row">
+                        <div class="mock-stat-card">
+                            <div class="mock-stat-label">Avg Performance</div>
+                            <div class="mock-stat-value green">87</div>
+                        </div>
+                        <div class="mock-stat-card">
+                            <div class="mock-stat-label">Total Scans</div>
+                            <div class="mock-stat-value blue">142</div>
+                        </div>
+                        <div class="mock-stat-card">
+                            <div class="mock-stat-label">Critical Issues</div>
+                            <div class="mock-stat-value red">3</div>
+                        </div>
+                        <div class="mock-stat-card">
+                            <div class="mock-stat-label">Uptime</div>
+                            <div class="mock-stat-value amber">100%</div>
+                        </div>
+                    </div>
+                    <div class="mock-content-row">
+                        <div class="mock-chart">
+                            <div class="mock-chart-title">Performance Trend</div>
+                            <svg class="mock-chart-svg" viewBox="0 0 400 120" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#10b981" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M0,80 Q50,70 100,50 T200,40 T300,30 T400,20 L400,120 L0,120 Z" fill="url(#chartGrad)"/>
+                                <path d="M0,80 Q50,70 100,50 T200,40 T300,30 T400,20" fill="none" stroke="#10b981" stroke-width="2.5"/>
+                                <circle cx="100" cy="50" r="3" fill="#10b981"/>
+                                <circle cx="200" cy="40" r="3" fill="#10b981"/>
+                                <circle cx="300" cy="30" r="3" fill="#10b981"/>
+                                <circle cx="400" cy="20" r="3" fill="#10b981"/>
+                            </svg>
+                        </div>
+                        <div class="mock-activity">
+                            <div class="mock-chart-title">Recent Activity</div>
+                            <div class="mock-activity-item">
+                                <div class="mock-activity-dot green"></div>
+                                <div class="mock-activity-info">
+                                    <span>example.com</span>
+                                    <small>Score: 92</small>
+                                </div>
+                                <div class="mock-badge green">COMPLETED</div>
+                            </div>
+                            <div class="mock-activity-item">
+                                <div class="mock-activity-dot green"></div>
+                                <div class="mock-activity-info">
+                                    <span>mysite.io</span>
+                                    <small>Score: 78</small>
+                                </div>
+                                <div class="mock-badge amber">COMPLETED</div>
+                            </div>
+                            <div class="mock-activity-item">
+                                <div class="mock-activity-dot red"></div>
+                                <div class="mock-activity-info">
+                                    <span>oldsite.org</span>
+                                    <small>Score: 34</small>
+                                </div>
+                                <div class="mock-badge red">CRITICAL</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
+    <!-- Architecture -->
+    <section id="architecture" class="section">
+        <h2 class="section-title reveal">System <span class="gradient-text">Architecture</span></h2>
+        <p class="section-subtitle reveal">A robust, horizontally scalable pipeline from request to result.</p>
+        <div class="arch-container glass reveal">
+            <div class="arch-flow">
+                <div class="arch-node client">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Client / API Request
+                </div>
+                <div class="arch-arrow">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                </div>
+                <div class="arch-node primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                    Next.js 14 App + REST API
+                </div>
+                <div class="arch-arrow">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                </div>
+                <div class="arch-row">
+                    <div class="arch-node queue">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V2H8v5"/></svg>
+                        Redis + BullMQ
+                    </div>
+                    <div class="arch-node db">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                        PostgreSQL + Prisma
+                    </div>
+                </div>
+                <div class="arch-arrow">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                </div>
+                <div class="arch-node worker">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+                    Worker Pool (Puppeteer + Lighthouse)
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API -->
+    <section id="api" class="section">
+        <h2 class="section-title reveal">Simple <span class="gradient-text">REST API</span></h2>
+        <p class="section-subtitle reveal">One endpoint to trigger audits. Clean JSON responses.</p>
+        <div class="api-grid">
+            <div class="api-card glass reveal">
+                <div class="api-method">
+                    <span class="method-badge">POST</span>
+                    <code>/api/scan</code>
+                </div>
+                <p class="api-desc">Submit a URL for Lighthouse audit. Returns audit ID for tracking.</p>
+                <div class="code-block">
+                    <div class="cmd-header">
+                        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                        <span class="cmd-title">Request Body</span>
+                    </div>
+                    <pre><code>{
+  <span class="code-key">"url"</span>: <span class="code-string">"https://example.com"</span>,
+  <span class="code-key">"projectId"</span>: <span class="code-string">"proj_01"</span>,
+  <span class="code-key">"projectName"</span>: <span class="code-string">"My Website"</span>,
+  <span class="code-key">"frequency"</span>: <span class="code-string">"daily"</span>
+}</code></pre>
+                </div>
+            </div>
+            <div class="api-card glass reveal">
+                <div class="api-method">
+                    <span class="method-badge success">200</span>
+                    <code>Response</code>
+                </div>
+                <p class="api-desc">Successful response with audit and project identifiers.</p>
+                <div class="code-block">
+                    <div class="cmd-header">
+                        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                        <span class="cmd-title">JSON Response</span>
+                    </div>
+                    <pre><code>{
+  <span class="code-key">"success"</span>: <span class="code-bool">true</span>,
+  <span class="code-key">"auditId"</span>: <span class="code-string">"clx1abc..."</span>,
+  <span class="code-key">"projectId"</span>: <span class="code-string">"proj_01"</span>
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Database Schema -->
+    <section id="schema" class="section">
+        <h2 class="section-title reveal">Database <span class="gradient-text">Schema</span></h2>
+        <p class="section-subtitle reveal">Clean data model powered by Prisma ORM.</p>
+        <div class="schema-grid">
+            <div class="schema-card glass reveal">
+                <div class="schema-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM3 9h18M9 21V9"/></svg>
+                    Project
+                </div>
+                <div class="schema-fields">
+                    <div class="schema-field"><span class="field-name">id</span><span class="field-type">String @id</span></div>
+                    <div class="schema-field"><span class="field-name">name</span><span class="field-type">String</span></div>
+                    <div class="schema-field"><span class="field-name">url</span><span class="field-type">String</span></div>
+                    <div class="schema-field"><span class="field-name">frequency</span><span class="field-type">String?</span></div>
+                    <div class="schema-field"><span class="field-name">createdAt</span><span class="field-type">DateTime</span></div>
+                    <div class="schema-field"><span class="field-name">updatedAt</span><span class="field-type">DateTime</span></div>
+                    <div class="schema-field"><span class="field-name">audits</span><span class="field-type">AuditResult[]</span></div>
+                </div>
+            </div>
+            <div class="schema-card glass reveal">
+                <div class="schema-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    AuditResult
+                </div>
+                <div class="schema-fields">
+                    <div class="schema-field"><span class="field-name">id</span><span class="field-type">String @id</span></div>
+                    <div class="schema-field"><span class="field-name">projectId</span><span class="field-type">String @relation</span></div>
+                    <div class="schema-field"><span class="field-name">status</span><span class="field-type">String</span></div>
+                    <div class="schema-field"><span class="field-name">score</span><span class="field-type">Int?</span></div>
+                    <div class="schema-field"><span class="field-name">report</span><span class="field-type">Json?</span></div>
+                    <div class="schema-field"><span class="field-name">errorMessage</span><span class="field-type">String?</span></div>
+                    <div class="schema-field"><span class="field-name">createdAt</span><span class="field-type">DateTime</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section id="techstack" class="section">
+        <h2 class="section-title reveal">Built With <span class="gradient-text">Modern Tech</span></h2>
+        <p class="section-subtitle reveal">Production-ready stack with best-in-class tools.</p>
+        <div class="tech-grid">
+            <div class="tech-item glass reveal">
+                <div class="tech-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="tech-info">
+                    <h4>Next.js 14</h4>
+                    <p>Frontend & API</p>
+                </div>
+            </div>
+            <div class="tech-item glass reveal">
+                <div class="tech-icon blue">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="tech-info">
+                    <h4>Tailwind CSS</h4>
+                    <p>Styling + shadcn/ui</p>
+                </div>
+            </div>
+            <div class="tech-item glass reveal">
+                <div class="tech-icon amber">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <div class="tech-info">
+                    <h4>Recharts</h4>
+                    <p>Data Visualization</p>
+                </div>
+            </div>
+            <div class="tech-item glass reveal">
+                <div class="tech-icon red">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V2H8v5"/></svg>
+                </div>
+                <div class="tech-info">
+                    <h4>Redis + BullMQ</h4>
+                    <p>Job Queue</p>
+                </div>
+            </div>
+            <div class="tech-item glass reveal">
+                <div class="tech-icon purple">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                </div>
+                <div class="tech-info">
+                    <h4>PostgreSQL</h4>
+                    <p>Database + Prisma ORM</p>
+                </div>
+            </div>
+            <div class="tech-item glass reveal">
+                <div class="tech-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                </div>
+                <div class="tech-info">
+                    <h4>Puppeteer</h4>
+                    <p>Browser Automation</p>
+                </div>
+            </div>
+            <div class="tech-item glass reveal">
+                <div class="tech-icon amber">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <div class="tech-info">
+                    <h4>Lighthouse</h4>
+                    <p>Performance Auditing</p>
+                </div>
+            </div>
+            <div class="tech-item glass reveal">
+                <div class="tech-icon blue">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 0012.63 8 4 4 0 008 11.37 4 4 0 0011.37 16 4 4 0 0016 11.37z"/></svg>
+                </div>
+                <div class="tech-info">
+                    <h4>Docker</h4>
+                    <p>Containerization</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section id="quickstart" class="section">
+        <h2 class="section-title reveal"><span class="gradient-text">Quick Start</span></h2>
+        <p class="section-subtitle reveal">Deploy the full stack in under 2 minutes with Docker Compose.</p>
+
+        <div class="steps-container">
+            <div class="step glass reveal">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Clone the repository</h4>
+                    <div class="code-block mini">
+                        <code><span class="code-prompt">$</span> git clone https://github.com/lekhanpro/perfpatrol.git
+<span class="code-prompt">$</span> cd perfpatrol</code>
+                    </div>
+                </div>
+            </div>
+            <div class="step glass reveal">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Configure environment</h4>
+                    <div class="code-block mini">
+                        <code><span class="code-prompt">$</span> cp .env.example .env</code>
+                    </div>
+                </div>
+            </div>
+            <div class="step glass reveal">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Start the entire stack</h4>
+                    <div class="code-block mini">
+                        <code><span class="code-prompt">$</span> docker-compose up -d</code>
+                    </div>
+                </div>
+            </div>
+            <div class="step glass reveal">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Open the dashboard</h4>
+                    <div class="code-block mini">
+                        <code><span class="code-comment"># Visit http://localhost:3000</span></code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deployment Options -->
+    <section id="deploy" class="section">
+        <h2 class="section-title reveal">Flexible <span class="gradient-text">Deployment</span></h2>
+        <p class="section-subtitle reveal">Choose the deployment strategy that fits your needs.</p>
+        <div class="deploy-grid">
+            <div class="deploy-card glass reveal">
+                <div class="deploy-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 0012.63 8 4 4 0 008 11.37 4 4 0 0011.37 16 4 4 0 0016 11.37z"/></svg>
+                </div>
+                <h4>Docker Compose</h4>
+                <p>Full-stack deployment with PostgreSQL, Redis, Web App, and Worker containers orchestrated together.</p>
+                <span class="deploy-tag">Recommended</span>
+            </div>
+            <div class="deploy-card glass reveal">
+                <div class="deploy-icon blue">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                </div>
+                <h4>Vercel + Managed DB</h4>
+                <p>Deploy the web app on Vercel with Supabase or Neon for managed PostgreSQL database hosting.</p>
+                <span class="deploy-tag">Serverless</span>
+            </div>
+            <div class="deploy-card glass reveal">
+                <div class="deploy-icon purple">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+                <h4>Railway / Render</h4>
+                <p>Deploy workers separately on Railway or Render using the included Dockerfile for horizontal scaling.</p>
+                <span class="deploy-tag">Workers</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section id="roadmap" class="section">
+        <h2 class="section-title reveal">On the <span class="gradient-text">Roadmap</span></h2>
+        <p class="section-subtitle reveal">What's coming next for Perf-Patrol.</p>
+        <div class="roadmap-grid">
+            <div class="roadmap-item glass reveal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                Alert Notifications
+            </div>
+            <div class="roadmap-item glass reveal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Scheduled Scans
+            </div>
+            <div class="roadmap-item glass reveal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                NextAuth.js Auth
+            </div>
+            <div class="roadmap-item glass reveal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                Mobile UI
+            </div>
+            <div class="roadmap-item glass reveal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                PDF Reports
+            </div>
+            <div class="roadmap-item glass reveal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                CLI Tool
+            </div>
+            <div class="roadmap-item glass reveal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                WebSocket Updates
+            </div>
+            <div class="roadmap-item glass reveal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                Multi-Page Crawling
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta-section">
+        <div class="cta-card glass reveal">
+            <h2>Ready to monitor your <span class="gradient-text">web performance</span>?</h2>
+            <p>Get started in under 2 minutes with Docker Compose. Free and open source forever.</p>
+            <div class="cta-actions">
+                <a href="https://github.com/lekhanpro/perfpatrol" class="btn-primary" target="_blank" rel="noopener">
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+                    View on GitHub
+                </a>
+                <a href="#quickstart" class="btn-secondary">Read the Docs</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer class="footer glass">
-        <p>Built with ❤️ by <a class="gradient-text" href="https://github.com/lekhanpro">@lekhanpro</a></p>
-        <p class="license">Licensed under MIT. Open source for the community.</p>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <div class="logo-icon small">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    Perf-Patrol
+                </div>
+                <p>Open-source web performance monitoring platform.</p>
+            </div>
+            <div class="footer-links">
+                <a href="https://github.com/lekhanpro/perfpatrol" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://github.com/lekhanpro/perfpatrol/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+                <a href="https://github.com/lekhanpro/perfpatrol/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Built by <a class="gradient-text" href="https://github.com/lekhanpro" target="_blank" rel="noopener">@lekhanpro</a></p>
+        </div>
     </footer>
 
     <script src="script.js"></script>
